@@ -28,7 +28,6 @@ jobs:
           DEPLOY_USER: ${{ secrets.DEPLOY_USER }}
         run: |
           rsync -avz --delete \
-            --rsync-path="sudo rsync" \
             -e "ssh -i ~/.ssh/deploy_key -p ${{ vars.DEPLOY_PORT }}" \
             ./public/ \
             "$DEPLOY_USER"@${{ vars.DEPLOY_HOST }}:/var/www/html/
@@ -39,7 +38,7 @@ jobs:
         run: |
           ssh -i ~/.ssh/deploy_key -p ${{ vars.DEPLOY_PORT }} \
             "$DEPLOY_USER"@${{ vars.DEPLOY_HOST }} \
-            "sudo chown -R www-data:www-data /var/www/html"
+            "sudo chown -R $DEPLOY_USER:www-data /var/www/html"
 
       - name: Cleanup SSH key
         if: always()
