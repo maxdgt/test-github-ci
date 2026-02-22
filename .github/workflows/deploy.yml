@@ -14,7 +14,11 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-24.04
+    timeout-minutes: 10
     environment: main
+    concurrency:
+      group: production
+      cancel-in-progress: true
 
     steps:
       - name: Checkout código
@@ -62,13 +66,13 @@ jobs:
 #      - name: Notify Slack success
 #        if: success()
 #        run: |
-#          curl -X POST ${{ secrets.SLACK_WEBHOOK }} \
-#            -H 'Content-type: application/json' \
-#            -d '{"text": "✅ Deploy exitoso"}'
+#          curl -X POST "${{ secrets.SLACK_WEBHOOK }}" \
+#          -H 'Content-type: application/json' \
+#          -d "{\"text\": \"✅ Deploy exitoso\n*Commit:* ${{ github.sha }}\n*Por:* ${{ github.actor }}\"}"
 #
 #      - name: Notify Slack failure
 #        if: failure()
 #        run: |
-#          curl -X POST ${{ secrets.SLACK_WEBHOOK }} \
-#            -H 'Content-type: application/json' \
-#            -d '{"text": "❌ Deploy fallido"}'
+#          curl -X POST "${{ secrets.SLACK_WEBHOOK }}" \
+#          -H 'Content-type: application/json' \
+#          -d "{\"text\": \"❌ Deploy fallido\n*Commit:* ${{ github.sha }}\n*Por:* ${{ github.actor }}\n*Ver logs:* ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}\"}"
