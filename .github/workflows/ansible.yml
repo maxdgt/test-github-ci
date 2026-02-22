@@ -1,0 +1,24 @@
+name: Ansible
+
+on:
+  workflow_dispatch:
+    inputs:
+      playbook:
+        description: 'Playbook a ejecutar'
+        required: true
+        default: 'site.yml'
+      host:
+        description: 'Host o grupo de inventario'
+        required: true
+        default: 'all'
+
+jobs:
+  ansible:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    environment: main
+    permissions:
+      contents: read
+
+    steps:
+      - run: echo "Ansible not implemented yet"
