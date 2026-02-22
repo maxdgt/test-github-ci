@@ -21,6 +21,17 @@ jobs:
         uses: actions/checkout@v4
         with:
           ref: ${{ github.event.inputs.ref || github.sha }}
+          fetch-depth: 0  # necesario para git log
+
+      - name: Generate changelog
+        if: github.event_name == 'push'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          git log --pretty=format:"- %s" ${{ github.event.before }}..${{ github.sha }} > CHANGELOG.md
+          gh release create ${{ github.sha }} \
+            --title "Deploy $(date +'%Y-%m-%d %H:%M')" \
+            --notes-file CHANGELOG.md
 
       # fix nginx permissions
       # sudo chown linuxuser:www-data /var/www/html
