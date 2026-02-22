@@ -28,6 +28,7 @@ jobs:
           DEPLOY_USER: ${{ secrets.DEPLOY_USER }}
         run: |
           rsync -avz --delete \
+            --chown="$DEPLOY_USER:www-data" \
             -e "ssh -i ~/.ssh/deploy_key -p ${{ vars.DEPLOY_PORT }}" \
             ./public/ \
             "$DEPLOY_USER"@${{ vars.DEPLOY_HOST }}:/var/www/html/
